@@ -1,0 +1,361 @@
+{
+  "candidates": {
+    "B": {
+      "diff": null,
+      "excerpt": "        with self.timer as time:\n            expires = self.__ttu(key, value, time)\n            if not (time < expires):\n                # The new value is already expired, so it is not stored.\n                # If the key still holds a previous (possibly still valid)\n                # value, drop it as well -- otherwise the assignment would\n                # be silently ignored and the stale value would persist.\n                try:\n                    self.__items.pop(key).removed = True\n                except KeyError:\n                    pass\n                else:",
+      "patch_sha256": null,
+      "runs": [
+        {
+          "assertions": 12,
+          "index": 1,
+          "label": "B",
+          "passed_assertions": 12,
+          "repetition": 1,
+          "setup_checks": 16,
+          "status": "PASS"
+        },
+        {
+          "assertions": 12,
+          "index": 6,
+          "label": "B",
+          "passed_assertions": 12,
+          "repetition": 2,
+          "setup_checks": 16,
+          "status": "PASS"
+        },
+        {
+          "assertions": 12,
+          "index": 7,
+          "label": "B",
+          "passed_assertions": 12,
+          "repetition": 3,
+          "setup_checks": 16,
+          "status": "PASS"
+        }
+      ],
+      "source_sha256": "6254b5c84ae6eb13f36790d5d7d0f3a4d13377663cb2c3df81aafd1b3d97b09a",
+      "stable": true,
+      "status": "PASS",
+      "violations": []
+    },
+    "N": {
+      "diff": "--- a/src/cachetools/__init__.py\n+++ b/src/cachetools/__init__.py\n@@ -634,6 +634,7 @@\n         cache_setitem=Cache.__setitem__,\n         cache_delitem=Cache.__delitem__,\n     ):\n+        \"\"\"Assign a value and discard any previous entry when its replacement is expired.\"\"\"\n         with self.timer as time:\n             expires = self.__ttu(key, value, time)\n             if not (time < expires):\n",
+      "patch_sha256": "01770254af9f03d600d6836248d8155502085ea780f9d7de226ecdb8039dbc9d",
+      "runs": [
+        {
+          "assertions": 12,
+          "index": 3,
+          "label": "N",
+          "passed_assertions": 12,
+          "repetition": 1,
+          "setup_checks": 16,
+          "status": "PASS"
+        },
+        {
+          "assertions": 12,
+          "index": 4,
+          "label": "N",
+          "passed_assertions": 12,
+          "repetition": 2,
+          "setup_checks": 16,
+          "status": "PASS"
+        },
+        {
+          "assertions": 12,
+          "index": 9,
+          "label": "N",
+          "passed_assertions": 12,
+          "repetition": 3,
+          "setup_checks": 16,
+          "status": "PASS"
+        }
+      ],
+      "source_sha256": "d813b9caa76179e44fc0e08aaff585c01e46c8640444dfb0fabd2611c985204f",
+      "stable": true,
+      "status": "PASS",
+      "violations": []
+    },
+    "R": {
+      "diff": "--- a/src/cachetools/__init__.py\n+++ b/src/cachetools/__init__.py\n@@ -637,6 +637,7 @@\n         with self.timer as time:\n             expires = self.__ttu(key, value, time)\n             if not (time < expires):\n+                return  # Intentionally seeded: retain the previous live entry.\n                 # The new value is already expired, so it is not stored.\n                 # If the key still holds a previous (possibly still valid)\n                 # value, drop it as well -- otherwise the assignment would\n",
+      "patch_sha256": "3f07839ea388fcb88ffaba446efeb00c6128c825281cee4ff049262d863d92ff",
+      "runs": [
+        {
+          "assertions": 12,
+          "index": 2,
+          "label": "R",
+          "passed_assertions": 8,
+          "repetition": 1,
+          "setup_checks": 16,
+          "status": "FAIL"
+        },
+        {
+          "assertions": 12,
+          "index": 5,
+          "label": "R",
+          "passed_assertions": 8,
+          "repetition": 2,
+          "setup_checks": 16,
+          "status": "FAIL"
+        },
+        {
+          "assertions": 12,
+          "index": 8,
+          "label": "R",
+          "passed_assertions": 8,
+          "repetition": 3,
+          "setup_checks": 16,
+          "status": "FAIL"
+        }
+      ],
+      "source_sha256": "2f7f74ca7dfab043e514c5cef9f42356c7d235bdb5b2b149cb909706610c7216",
+      "stable": true,
+      "status": "REGRESSION_DETECTED",
+      "violations": [
+        {
+          "assertion_id": "target_absent",
+          "claim_id": "C1",
+          "expected": {
+            "kind": "value",
+            "value": false
+          },
+          "observed": {
+            "kind": "value",
+            "value": true
+          },
+          "scenario_id": "expiry_at_boundary"
+        },
+        {
+          "assertion_id": "target_lookup_KeyError",
+          "claim_id": "C2",
+          "expected": {
+            "kind": "KeyError"
+          },
+          "observed": {
+            "kind": "value",
+            "value": 5
+          },
+          "scenario_id": "expiry_at_boundary"
+        },
+        {
+          "assertion_id": "target_absent",
+          "claim_id": "C1",
+          "expected": {
+            "kind": "value",
+            "value": false
+          },
+          "observed": {
+            "kind": "value",
+            "value": true
+          },
+          "scenario_id": "expiry_before_boundary"
+        },
+        {
+          "assertion_id": "target_lookup_KeyError",
+          "claim_id": "C2",
+          "expected": {
+            "kind": "KeyError"
+          },
+          "observed": {
+            "kind": "value",
+            "value": 5
+          },
+          "scenario_id": "expiry_before_boundary"
+        }
+      ]
+    }
+  },
+  "contract": {
+    "claims": [
+      {
+        "display_text": "After assigning an expired incoming replacement, the target key is absent from membership.",
+        "id": "C1",
+        "scenario_ids": [
+          "expiry_at_boundary",
+          "expiry_before_boundary",
+          "absent_target"
+        ]
+      },
+      {
+        "display_text": "After assigning an expired incoming replacement, direct target lookup raises KeyError.",
+        "id": "C2",
+        "scenario_ids": [
+          "expiry_at_boundary",
+          "expiry_before_boundary",
+          "absent_target"
+        ]
+      },
+      {
+        "display_text": "The independently live survivor remains readable with its original value.",
+        "id": "C3",
+        "scenario_ids": [
+          "expiry_at_boundary",
+          "expiry_before_boundary",
+          "valid_replacement",
+          "absent_target"
+        ]
+      },
+      {
+        "display_text": "A replacement with expiry after the fixed current time is present and reads as the new value.",
+        "id": "C4",
+        "scenario_ids": [
+          "valid_replacement"
+        ]
+      }
+    ],
+    "exclusions": [
+      "physical_heap_cleanup",
+      "assignment_return_value",
+      "concurrency",
+      "effectful_callbacks",
+      "arbitrary_values",
+      "capacity_eviction",
+      "universal_expiry_schedules"
+    ],
+    "id": "cachetools-tlru-expired-replacement",
+    "subject": "cachetools.TLRUCache.__setitem__",
+    "version": 1
+  },
+  "demo_expectations_met": true,
+  "disclosure": "INTENTIONALLY_SEEDED_REGRESSION",
+  "human_boundaries": [
+    "Contract reviewed",
+    "Exact check approved",
+    "Checkpoint D activated",
+    "Separate E execution authorized",
+    "Bounded run completed"
+  ],
+  "invocations": [
+    {
+      "assertions": 12,
+      "index": 1,
+      "label": "B",
+      "passed_assertions": 12,
+      "repetition": 1,
+      "setup_checks": 16,
+      "status": "PASS"
+    },
+    {
+      "assertions": 12,
+      "index": 2,
+      "label": "R",
+      "passed_assertions": 8,
+      "repetition": 1,
+      "setup_checks": 16,
+      "status": "FAIL"
+    },
+    {
+      "assertions": 12,
+      "index": 3,
+      "label": "N",
+      "passed_assertions": 12,
+      "repetition": 1,
+      "setup_checks": 16,
+      "status": "PASS"
+    },
+    {
+      "assertions": 12,
+      "index": 4,
+      "label": "N",
+      "passed_assertions": 12,
+      "repetition": 2,
+      "setup_checks": 16,
+      "status": "PASS"
+    },
+    {
+      "assertions": 12,
+      "index": 5,
+      "label": "R",
+      "passed_assertions": 8,
+      "repetition": 2,
+      "setup_checks": 16,
+      "status": "FAIL"
+    },
+    {
+      "assertions": 12,
+      "index": 6,
+      "label": "B",
+      "passed_assertions": 12,
+      "repetition": 2,
+      "setup_checks": 16,
+      "status": "PASS"
+    },
+    {
+      "assertions": 12,
+      "index": 7,
+      "label": "B",
+      "passed_assertions": 12,
+      "repetition": 3,
+      "setup_checks": 16,
+      "status": "PASS"
+    },
+    {
+      "assertions": 12,
+      "index": 8,
+      "label": "R",
+      "passed_assertions": 8,
+      "repetition": 3,
+      "setup_checks": 16,
+      "status": "FAIL"
+    },
+    {
+      "assertions": 12,
+      "index": 9,
+      "label": "N",
+      "passed_assertions": 12,
+      "repetition": 3,
+      "setup_checks": 16,
+      "status": "PASS"
+    }
+  ],
+  "limitations": [
+    "INTENTIONALLY_SEEDED_REGRESSION",
+    "The regression is deliberately seeded for demonstration and is not evidence of autonomous discovery of a naturally occurring AI-generated bug.",
+    "Known case with upstream-test overlap; no unseen-bug discovery or generalization",
+    "Locally trusted developer-inspected candidates; no hostile-code or network isolation",
+    "Local self-attestation and ledgers; no strong identity or remote execution attestation"
+  ],
+  "plan": {
+    "check_stderr_limit": 8192,
+    "check_stdout_limit": 32768,
+    "flags": [
+      "-I",
+      "-S",
+      "-B"
+    ],
+    "order": [
+      "B",
+      "R",
+      "N",
+      "N",
+      "R",
+      "B",
+      "B",
+      "R",
+      "N"
+    ],
+    "repetitions": 3,
+    "stderr_limit": 65536,
+    "stdout_limit": 262144,
+    "timeout_seconds": 10
+  },
+  "provenance": {
+    "check_sha256": "10f555bd6b96f2b23714435b9240242103d496bb70c082e1664b66a3f7bc86ec",
+    "contract_sha256": "75ff5b30a2513c5009d90ba07098aa4b402c1650540c5f49cfbc57918cd0bdfc",
+    "evidence_files": 72,
+    "independent_audit": "Developer reports VERIFIED_REAL_DEMO; existing read-only verifier also passed",
+    "kind": "PUBLIC_DERIVED_SUMMARY",
+    "original_evidence_public": false,
+    "report_sha256": "38d9b7e03bb9b3988bf1bdaa078e6b407fc729d55f5ce3618b8515e7c1e2ac6b",
+    "runner_sha256": "08b960cc234d3ff574dd2523c266abf71ce260df623dbb85694a1990c3af7fdf",
+    "scope": "Summary derived from hash-pinned retained local originals; not remote execution attestation",
+    "verification": "COMPLETED_EVIDENCE_VERIFIED"
+  },
+  "schema_version": 1,
+  "state": "VERIFIED_REAL_DEMO",
+  "totals": {
+    "assertions": 108,
+    "failed_assertions": 12,
+    "invocations": 9,
+    "setup_checks": 144
+  }
+}
