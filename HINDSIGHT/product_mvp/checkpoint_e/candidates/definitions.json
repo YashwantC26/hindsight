@@ -1,0 +1,25 @@
+{
+  "authorship": "Codex primary implementation agent, following explicit developer candidate instructions; no independent bug discovery",
+  "baseline_revision": "c0fdf6abab38040947d6fe2e38c507401d5e2350",
+  "baseline_source_sha256": "6254b5c84ae6eb13f36790d5d7d0f3a4d13377663cb2c3df81aafd1b3d97b09a",
+  "candidates": {
+    "N": {
+      "disclosure": "BENIGN_CONTROL",
+      "expected": "all four scenarios PASS",
+      "naturally_occurring_agent_mistake": false,
+      "patch_file": "N.patch",
+      "patch_sha256": "01770254af9f03d600d6836248d8155502085ea780f9d7de226ecdb8039dbc9d",
+      "source_sha256": "d813b9caa76179e44fc0e08aaff585c01e46c8640444dfb0fabd2611c985204f"
+    },
+    "R": {
+      "disclosure": "INTENTIONALLY_SEEDED_REGRESSION",
+      "expected": "C1/C2 FAIL in both expiry discriminators; controls PASS",
+      "naturally_occurring_agent_mistake": false,
+      "patch_file": "R.patch",
+      "patch_sha256": "3f07839ea388fcb88ffaba446efeb00c6128c825281cee4ff049262d863d92ff",
+      "source_sha256": "2f7f74ca7dfab043e514c5cef9f42356c7d235bdb5b2b149cb909706610c7216"
+    }
+  },
+  "path": "src/cachetools/__init__.py",
+  "schema_version": 1
+}

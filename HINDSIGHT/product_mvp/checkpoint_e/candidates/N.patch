@@ -1,0 +1,10 @@
+--- a/src/cachetools/__init__.py
++++ b/src/cachetools/__init__.py
+@@ -634,6 +634,7 @@
+         cache_setitem=Cache.__setitem__,
+         cache_delitem=Cache.__delitem__,
+     ):
++        """Assign a value and discard any previous entry when its replacement is expired."""
+         with self.timer as time:
+             expires = self.__ttu(key, value, time)
+             if not (time < expires):

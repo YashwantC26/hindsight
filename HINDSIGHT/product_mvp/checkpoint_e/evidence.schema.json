@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hindsight:checkpoint-e:evidence:v1",
+  "title": "Checkpoint E retained-evidence report v1",
+  "description": "Shape validation is supplementary. runner.py reconstructs current activation, authorization, source, collection and raw envelope bindings and recomputes classification. A schema-valid report is not sufficient evidence or authorization.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "checkpoint", "created_at", "bindings", "authorization_sha256", "classification", "evidence_inventory", "limitations"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "checkpoint": {"const": "E"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "bindings": {"$ref": "#/$defs/bindings"},
+    "authorization_sha256": {"$ref": "#/$defs/sha256"},
+    "classification": {"$ref": "#/$defs/classification"},
+    "evidence_inventory": {
+      "type": "object", "minProperties": 72, "maxProperties": 72,
+      "propertyNames": {"pattern": "^invocation-0[1-9]/(launch-request\\.json|launch-context\\.json|collection\\.json|execution\\.json|stdout\\.bin|stderr\\.bin|check-stdout\\.bin|check-stderr\\.bin)$"},
+      "additionalProperties": {"$ref": "#/$defs/file"}
+    },
+    "limitations": {"type": "array", "minItems": 4, "items": {"type": "string"}}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "file": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sha256", "size"],
+      "properties": {"sha256": {"$ref": "#/$defs/sha256"}, "size": {"type": "integer", "minimum": 0}}
+    },
+    "status": {"enum": ["PASS", "REGRESSION_DETECTED", "ERROR", "UNSTABLE", "INCONCLUSIVE"]},
+    "violation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["scenario_id", "claim_id", "assertion_id", "observed", "expected"],
+      "properties": {
+        "scenario_id": {"enum": ["expiry_at_boundary", "expiry_before_boundary", "valid_replacement", "absent_target"]},
+        "claim_id": {"enum": ["C1", "C2", "C3", "C4"]},
+        "assertion_id": {"type": "string"},
+        "observed": {"type": "object"}, "expected": {"type": "object"}
+      }
+    },
+    "candidate_outcome": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "violations", "explanation"],
+      "properties": {"status": {"$ref": "#/$defs/status"}, "violations": {"type": "array", "items": {"$ref": "#/$defs/violation"}}, "explanation": {"type": "string"}}
+    },
+    "classification": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "baseline", "candidates", "demo_expectations_met", "explanation"],
+      "properties": {
+        "status": {"$ref": "#/$defs/status"},
+        "baseline": {"enum": ["PASS", "FAIL", "ERROR", "UNSTABLE"]},
+        "candidates": {"type": "object", "additionalProperties": false, "required": ["R", "N"], "properties": {"R": {"$ref": "#/$defs/candidate_outcome"}, "N": {"$ref": "#/$defs/candidate_outcome"}}},
+        "demo_expectations_met": {"type": "boolean"}, "explanation": {"type": "string"}
+      }
+    },
+    "bindings": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schema_version", "checkpoint", "prepared_path", "activation", "runner_sha256", "baseline_revision", "definitions", "manifests", "plan", "implementation_inputs", "limitations"],
+      "properties": {
+        "schema_version": {"const": 1}, "checkpoint": {"const": "E"}, "prepared_path": {"type": "string"},
+        "activation": {"type": "object", "additionalProperties": false, "required": ["decision_sha256", "verified"], "properties": {"decision_sha256": {"$ref": "#/$defs/sha256"}, "verified": {"type": "object"}}},
+        "runner_sha256": {"$ref": "#/$defs/sha256"},
+        "baseline_revision": {"const": "c0fdf6abab38040947d6fe2e38c507401d5e2350"},
+        "definitions": {"type": "object"},
+        "manifests": {"type": "object", "additionalProperties": false, "required": ["B", "R", "N"], "properties": {"B": {"type": "object"}, "R": {"type": "object"}, "N": {"type": "object"}}},
+        "plan": {
+          "type": "object", "additionalProperties": false,
+          "required": ["order", "repetitions", "timeout_seconds", "stdout_limit", "stderr_limit", "check_stdout_limit", "check_stderr_limit", "flags", "environment"],
+          "properties": {
+            "order": {"const": ["B", "R", "N", "N", "R", "B", "B", "R", "N"]},
+            "repetitions": {"const": 3}, "timeout_seconds": {"const": 10}, "stdout_limit": {"const": 262144},
+            "stderr_limit": {"const": 65536}, "check_stdout_limit": {"const": 32768}, "check_stderr_limit": {"const": 8192},
+            "flags": {"const": ["-I", "-S", "-B"]}, "environment": {"type": "object", "additionalProperties": {"type": "string"}}
+          }
+        },
+        "implementation_inputs": {"type": "object", "additionalProperties": {"$ref": "#/$defs/sha256"}},
+        "limitations": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "execution_record": {
+      "type": "object", "additionalProperties": false,
+      "required": ["invocation", "label", "repetition", "status", "result", "reason"],
+      "properties": {
+        "invocation": {"type": "integer", "minimum": 1, "maximum": 9},
+        "label": {"enum": ["B", "R", "N"]}, "repetition": {"type": "integer", "minimum": 1, "maximum": 3},
+        "status": {"enum": ["PASS", "FAIL", "ERROR"]}, "result": {"type": ["object", "null"]}, "reason": {"type": ["string", "null"]}
+      }
+    },
+    "worker_envelope": {"$ref": "../execution-evidence.schema.json"}
+  }
+}

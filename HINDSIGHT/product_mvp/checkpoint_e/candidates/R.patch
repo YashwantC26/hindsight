@@ -1,0 +1,10 @@
+--- a/src/cachetools/__init__.py
++++ b/src/cachetools/__init__.py
+@@ -637,6 +637,7 @@
+         with self.timer as time:
+             expires = self.__ttu(key, value, time)
+             if not (time < expires):
++                return  # Intentionally seeded: retain the previous live entry.
+                 # The new value is already expired, so it is not stored.
+                 # If the key still holds a previous (possibly still valid)
+                 # value, drop it as well -- otherwise the assignment would

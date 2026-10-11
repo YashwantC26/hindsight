@@ -1,0 +1,164 @@
+{
+  "scope": "Publication source copies; no approval/evidence records exported",
+  "files": [
+    {
+      "source": "HINDSIGHT/product_mvp/activation_cli.py",
+      "published": "HINDSIGHT/product_mvp/activation_cli.py",
+      "sha256": "f96183f31aa8d50d2b751274c0716c6d93f2cfe15981ada28d6c5eeb979bb1f6",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/checks.py",
+      "published": "HINDSIGHT/product_mvp/checks.py",
+      "sha256": "053aba8d9b7715212765a779bc2ff74fa134f906cdc1ef1919ea5a88a481a00a",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/cli.py",
+      "published": "HINDSIGHT/product_mvp/cli.py",
+      "sha256": "b10473f299b8d4d4390fc664822a50e8600e094b23d6549bbcc5bb3be83b08cf",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/common.py",
+      "published": "HINDSIGHT/product_mvp/common.py",
+      "sha256": "c62ae79240f971595dd332160330dd9214588bba2467e8281622183c27da4a20",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/execution_evidence.py",
+      "published": "HINDSIGHT/product_mvp/execution_evidence.py",
+      "sha256": "d819de6b03286e4e3cab0a2dea62e92ab470a4018e4e51a58905c736f26f15c0",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/historical_runner.py",
+      "published": "HINDSIGHT/product_mvp/historical_runner.py",
+      "sha256": "6494cc12b331c343a87c5014954a3b943f38cf0a1f815fd362008b7392c27799",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/historical_worker.py",
+      "published": "HINDSIGHT/product_mvp/historical_worker.py",
+      "sha256": "054f21127b20b944b68254c8f26ce244d962fba26fcbcaad28ad6443bff6c416",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/navigation.py",
+      "published": "HINDSIGHT/product_mvp/navigation.py",
+      "sha256": "f1af57ca17edf9fd5e5096ca0574a5ed5404eb255a94be8473267dce7d96ed5f",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/reference.py",
+      "published": "HINDSIGHT/product_mvp/reference.py",
+      "sha256": "e6046b5c8ee4bd033df68fcb95c1e01bd0a807585ed0f36f7a4fed28c6c38b4c",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/reference_worker.py",
+      "published": "HINDSIGHT/product_mvp/reference_worker.py",
+      "sha256": "a0dcf7c29b0fff97b56b59b52a645725de86f636e8f73473d6e8c5632b114a0a",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/review.py",
+      "published": "HINDSIGHT/product_mvp/review.py",
+      "sha256": "1638eb0a11a362dee75cea2dccd9991595ec20a5acb1e04d6eab9eaeff358ec9",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/semantics.py",
+      "published": "HINDSIGHT/product_mvp/semantics.py",
+      "sha256": "b1ddd83f51f56eae5474779196d2deb33567f9ed6acc72cecb35eef1a59dbf8a",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/snapshots.py",
+      "published": "HINDSIGHT/product_mvp/snapshots.py",
+      "sha256": "7bb1ce603b50894de648bfca8cdf3eedf0d19f50aba555e4df81c1122ef40f2d",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/execution-evidence.schema.json",
+      "published": "HINDSIGHT/product_mvp/execution-evidence.schema.json",
+      "sha256": "ca5d6c385ce5f5467df891173c9d4e8e08955f1461e73da3967a7a856c861d0e",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/test_checks.py",
+      "published": "HINDSIGHT/product_mvp/test_checks.py",
+      "sha256": "cd4db504c14866b3244751cb963746cec17520c26eef2a060071e7d964e463d1",
+      "copied_byte_identically": false,
+      "published_sha256": "2a7e55cb1ab7a2176838145045c07ab55e6e1cb41e2f728ef37ea6c85a8981bd",
+      "transformation": "Publication-only synthetic subset omits test_static_apis_without_importing_historical_cachetools, which needs withheld full A/B snapshots. Original test unchanged."
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/test_lookup_classification.py",
+      "published": "HINDSIGHT/product_mvp/test_lookup_classification.py",
+      "sha256": "d0d07ee53324d133e9c8522c654a0a4ca22445329c431beefec9d223f9561241",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/templates/tlru_expired_replacement_v1.py.tmpl",
+      "published": "HINDSIGHT/product_mvp/templates/tlru_expired_replacement_v1.py.tmpl",
+      "sha256": "16819fb9b5a8d9b115541df6ccddef28f3f46c2cf8f4ab90be210e33aa16cd8a",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/templates/tlru_expired_replacement_v1.r2.py.tmpl",
+      "published": "HINDSIGHT/product_mvp/templates/tlru_expired_replacement_v1.r2.py.tmpl",
+      "sha256": "429535b29692f743d218ed4700ec22f2991e4d5a1df8f3179ab0acd3e3042c37",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/checkpoint_e/runner.py",
+      "published": "HINDSIGHT/product_mvp/checkpoint_e/runner.py",
+      "sha256": "08b960cc234d3ff574dd2523c266abf71ce260df623dbb85694a1990c3af7fdf",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/checkpoint_e/test_runner.py",
+      "published": "HINDSIGHT/product_mvp/checkpoint_e/test_runner.py",
+      "sha256": "735aeabeb616437a9467cb4f86f32b9302ef75fe54eb3e4dc96e5c33b48a0b05",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/checkpoint_e/DESIGN.md",
+      "published": "HINDSIGHT/product_mvp/checkpoint_e/DESIGN.md",
+      "sha256": "6a4e79c61be0c5ac6de1a164db3da2246ec024cd056e50bbc9edd82c66001513",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/checkpoint_e/evidence.schema.json",
+      "published": "HINDSIGHT/product_mvp/checkpoint_e/evidence.schema.json",
+      "sha256": "a8b2cff98a11f0d178c63b76e9e8f5796d034735af97c231f1c529df798046b2",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/checkpoint_e/candidates/definitions.json",
+      "published": "HINDSIGHT/product_mvp/checkpoint_e/candidates/definitions.json",
+      "sha256": "15e64cf83a6dfc4fc96b3310d69eb2e3f4509e376a8937c49346f7779e4dd8bd",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/checkpoint_e/candidates/R.patch",
+      "published": "HINDSIGHT/product_mvp/checkpoint_e/candidates/R.patch",
+      "sha256": "3f07839ea388fcb88ffaba446efeb00c6128c825281cee4ff049262d863d92ff",
+      "copied_byte_identically": true
+    },
+    {
+      "source": "HINDSIGHT/product_mvp/checkpoint_e/candidates/N.patch",
+      "published": "HINDSIGHT/product_mvp/checkpoint_e/candidates/N.patch",
+      "sha256": "01770254af9f03d600d6836248d8155502085ea780f9d7de226ecdb8039dbc9d",
+      "copied_byte_identically": true
+    }
+  ],
+  "synthetic_worker_test_subset": {
+    "source": "HINDSIGHT/product_mvp/test_runner_corrections.py",
+    "source_sha256": "363b36c2634651c97ef5851dbfd98be92cb1ea988b552cd2dcb83d3ca0fffbfc",
+    "class": "WorkerCorrections",
+    "published": "HINDSIGHT/product_mvp/test_public_worker.py",
+    "case_count": 7
+  }
+}

@@ -1,0 +1,183 @@
+#!/usr/bin/env python3
+"""Finite developer-reviewed check. Run only after separate exact-check approval.
+
+Use an isolated fresh interpreter (-I -S -B). The trusted historical/future
+runner must independently verify approval, check hash and manifest provenance,
+enforce a timeout, and capture this process's JSON and exit code.
+"""
+import argparse
+import hashlib
+import importlib
+import json
+from pathlib import Path
+import sys
+
+CONTRACT_SHA256 = __CONTRACT_SHA256__
+RECIPE_SHA256 = __RECIPE_SHA256__
+TEMPLATE_SHA256 = __TEMPLATE_SHA256__
+RECIPE = __RECIPE__
+
+
+def constant_clock():
+    return RECIPE["clock_now"]
+
+
+def time_to_use(key, value, now):
+    return now + value
+
+
+def observe_membership(cache, key):
+    try:
+        return {"kind": "value", "value": key in cache}
+    except Exception as exc:
+        return {"kind": "error", "type": type(exc).__name__, "message": str(exc)}
+
+
+def observe_lookup(cache, key):
+    try:
+        value = cache[key]
+        if type(value) is not int:
+            return {"kind": "error", "type": "UnexpectedValueType"}
+        return {"kind": "value", "value": value}
+    except KeyError:
+        return {"kind": "KeyError"}
+    except Exception as exc:
+        return {"kind": "error", "type": type(exc).__name__, "message": str(exc)}
+
+
+def record_assertion(records, claim, assertion, observed, expected):
+    status = "ERROR" if observed["kind"] == "error" else ("PASS" if observed == expected else "FAIL")
+    records.append({"claim_id": claim, "assertion_id": assertion, "status": status,
+                    "observed": observed, "expected": expected})
+
+
+def run_checks(cache_class):
+    """One fresh cache per scenario; no historical expectations influence results."""
+    results = []
+    for scenario in RECIPE["scenarios"]:
+        result = {"scenario_id": scenario["id"], "historical_role": scenario["historical_role"],
+                  "assertions": [], "observations": {}, "status": "ERROR"}
+        results.append(result)
+        target, survivor = RECIPE["target_key"], RECIPE["survivor_key"]
+        try:
+            cache = cache_class(maxsize=RECIPE["maxsize"], timer=constant_clock, ttu=time_to_use)
+            if scenario["initial_target_present"]:
+                cache[target] = RECIPE["old_value"]
+            cache[survivor] = RECIPE["survivor_value"]
+            setup = {"target_membership": observe_membership(cache, target),
+                     "target_lookup": observe_lookup(cache, target),
+                     "survivor_membership": observe_membership(cache, survivor),
+                     "survivor_lookup": observe_lookup(cache, survivor)}
+            result["setup_observations"] = setup
+            target_lookup = ({"kind": "value", "value": RECIPE["old_value"]}
+                             if scenario["initial_target_present"] else {"kind": "KeyError"})
+            expected_setup = {"target_membership": {"kind": "value", "value": scenario["initial_target_present"]},
+                              "target_lookup": target_lookup,
+                              "survivor_membership": {"kind": "value", "value": True},
+                              "survivor_lookup": {"kind": "value", "value": RECIPE["survivor_value"]}}
+            if setup != expected_setup:
+                raise RuntimeError("SETUP_PRECONDITION_MISMATCH")
+        except Exception as exc:
+            result["error"] = {"stage": "setup", "type": type(exc).__name__, "message": str(exc)}
+            continue
+        try:
+            cache[target] = scenario["replacement"]
+        except Exception as exc:
+            result["error"] = {"stage": "assignment", "type": type(exc).__name__, "message": str(exc)}
+            continue
+        # Preserve this observation order before any additional cleanup operation.
+        membership = observe_membership(cache, target)
+        target_read = observe_lookup(cache, target)
+        survivor_read = observe_lookup(cache, survivor)
+        result["observations"] = {"target_membership": membership,
+                                  "target_lookup": target_read, "survivor_lookup": survivor_read}
+        records = result["assertions"]
+        if scenario["expected_target"] == "absent":
+            record_assertion(records, "C1", "target_absent", membership, {"kind": "value", "value": False})
+            record_assertion(records, "C2", "target_lookup_KeyError", target_read, {"kind": "KeyError"})
+        else:
+            record_assertion(records, "C4", "target_present", membership, {"kind": "value", "value": True})
+            record_assertion(records, "C4", "target_reads_replacement", target_read,
+                             {"kind": "value", "value": scenario["replacement"]})
+        record_assertion(records, "C3", "survivor_unchanged", survivor_read,
+                         {"kind": "value", "value": RECIPE["survivor_value"]})
+        statuses = [record["status"] for record in records]
+        result["status"] = "ERROR" if "ERROR" in statuses else ("FAIL" if "FAIL" in statuses else "PASS")
+    statuses = [result["status"] for result in results]
+    status = "ERROR" if not statuses or "ERROR" in statuses else ("FAIL" if "FAIL" in statuses else "PASS")
+    return {"status": status, "contract_sha256": CONTRACT_SHA256, "recipe_sha256": RECIPE_SHA256,
+            "template_sha256": TEMPLATE_SHA256, "scenarios": results}
+
+
+def sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def verify_snapshot(root, manifest):
+    files = manifest["files"]
+    canonical = json.dumps(files, sort_keys=True, separators=(",", ":"), allow_nan=False).encode()
+    if not files or sha(canonical) != manifest["files_sha256"]:
+        raise ValueError("SNAPSHOT_MANIFEST_INTEGRITY")
+    actual = {p.relative_to(root).as_posix() for p in root.rglob("*") if p.is_file() or p.is_symlink()}
+    if actual != set(files):
+        raise ValueError("SNAPSHOT_FILE_SET_MISMATCH")
+    for name, record in files.items():
+        path = root / name
+        if Path(name).is_absolute() or ".." in Path(name).parts or path.is_symlink() or not path.resolve().is_relative_to(root):
+            raise ValueError("UNSAFE_SNAPSHOT_PATH")
+        if sha(path.read_bytes()) != record["sha256"]:
+            raise ValueError("SNAPSHOT_SOURCE_MISMATCH: " + name)
+
+
+def verify_imports(root, manifest):
+    imports = {}
+    for name, module in list(sys.modules.items()):
+        if name != "cachetools" and not name.startswith("cachetools."):
+            continue
+        path = Path(module.__file__).resolve()
+        relative = path.relative_to(root).as_posix()
+        if not relative.startswith("src/cachetools/") or sha(path.read_bytes()) != manifest["files"][relative]["sha256"]:
+            raise ValueError("IMPORT_SOURCE_MISMATCH: " + name)
+        imports[name] = {"path": str(path), "sha256": sha(path.read_bytes())}
+    if "cachetools" not in imports or imports["cachetools"]["path"] != str(root / "src/cachetools/__init__.py"):
+        raise ValueError("WRONG_CACHETOOLS_IMPORT")
+    return imports
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--snapshot-root", type=Path, required=True)
+    parser.add_argument("--snapshot-manifest", type=Path, required=True)
+    parser.add_argument("--manifest-sha256", required=True)
+    args = parser.parse_args()
+    result = {"status": "ERROR", "scenarios": []}
+    try:
+        if not (sys.flags.isolated and sys.flags.no_site and sys.dont_write_bytecode):
+            raise ValueError("ISOLATED_INTERPRETER_REQUIRED: -I -S -B")
+        raw = args.snapshot_manifest.read_bytes()
+        if sha(raw) != args.manifest_sha256:
+            raise ValueError("MANIFEST_HASH_MISMATCH")
+        manifest = json.loads(raw)
+        root = args.snapshot_root.resolve()
+        verify_snapshot(root, manifest)
+        if any(name == "cachetools" or name.startswith("cachetools.") for name in sys.modules):
+            raise ValueError("PRELOADED_CACHETOOLS_REJECTED")
+        sys.path.insert(0, str(root / "src"))
+        package = importlib.import_module("cachetools")
+        before = verify_imports(root, manifest)
+        result = run_checks(package.TLRUCache)
+        result["imports_before"] = before
+        result["imports_after"] = verify_imports(root, manifest)
+        verify_snapshot(root, manifest)
+        result["snapshot_verified_before_and_after"] = True
+        result["revision"] = manifest["revision"]
+        result["manifest_sha256"] = args.manifest_sha256
+    except Exception as exc:
+        result["status"] = "ERROR"
+        result["error"] = {"stage": "harness_or_integrity", "type": type(exc).__name__, "message": str(exc)}
+    print(json.dumps(result, sort_keys=True, allow_nan=False))
+    return {"PASS": 0, "FAIL": 1, "ERROR": 2}[result["status"]]
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

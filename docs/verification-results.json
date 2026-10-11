@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "python_version": "3.14.7",
+  "results": [
+    {
+      "suite": "public-templates-final",
+      "tests_run": 8,
+      "passed": 8,
+      "elapsed_seconds": 0.058,
+      "exit_code": 0,
+      "provenance": "Completed unittest invocation after publication-only omission; full command output retained in task transcript"
+    },
+    {
+      "suite": "public-lookups",
+      "tests_run": 8,
+      "passed": 8,
+      "elapsed_seconds": 0.03,
+      "exit_code": 0
+    },
+    {
+      "suite": "public-workers",
+      "tests_run": 7,
+      "passed": 7,
+      "elapsed_seconds": 0.024,
+      "exit_code": 0
+    },
+    {
+      "suite": "local-checkpoint-e",
+      "tests_run": 42,
+      "passed": 42,
+      "elapsed_seconds": 58.086,
+      "exit_code": 0
+    },
+    {
+      "suite": "local-runner",
+      "tests_run": 23,
+      "passed": 23,
+      "elapsed_seconds": 6.648,
+      "exit_code": 0
+    },
+    {
+      "suite": "local-corrections",
+      "tests_run": 20,
+      "passed": 20,
+      "elapsed_seconds": 2.421,
+      "exit_code": 0
+    }
+  ],
+  "portable_public_tests_passed": 23,
+  "local_E_and_reusable_tests_passed": 85,
+  "real_historical_or_candidate_execution": false,
+  "real_authorization_created": false,
+  "public_template_scope": "Eight original synthetic cases; one snapshot-dependent static API case intentionally omitted from public copy",
+  "initial_public_attempt": "One expected missing-snapshot error before making the public subset explicit; original local test unchanged",
+  "D_legacy_test_note": "Prior 39/40: pre-activation-only decision-absence assertion, not current effective validity. Not rerun in publication task.",
+  "additional_disclosure_probes": "User reports independent 17/17 re-audit probes; not rerun or independently claimed here"
+}

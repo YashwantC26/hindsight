@@ -1,0 +1,539 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hindsight:trusted-execution:v2",
+  "title": "HINDSIGHT complete trusted execution envelope v2",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "kind": {
+      "const": "hindsight_trusted_execution_v2"
+    },
+    "pid": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "interpreter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "executable": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "version": {
+          "type": "string"
+        },
+        "implementation": {
+          "const": "CPython"
+        },
+        "flags": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "isolated": {
+              "const": true
+            },
+            "no_site": {
+              "const": true
+            },
+            "no_bytecode": {
+              "const": true
+            }
+          },
+          "required": [
+            "isolated",
+            "no_site",
+            "no_bytecode"
+          ]
+        }
+      },
+      "required": [
+        "executable",
+        "sha256",
+        "version",
+        "implementation",
+        "flags"
+      ]
+    },
+    "check_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "cwd": {
+      "type": "string"
+    },
+    "module_files": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/file"
+      }
+    },
+    "result": {
+      "$ref": "#/$defs/result"
+    },
+    "invocation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "request_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "check_stdout_b64": {
+      "type": "string",
+      "contentEncoding": "base64"
+    },
+    "check_stderr_b64": {
+      "type": "string",
+      "contentEncoding": "base64"
+    },
+    "check_stdout_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "check_stderr_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "check_output_overflow": {
+      "const": false
+    },
+    "nonfile_modules": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "built-in",
+              "frozen"
+            ]
+          },
+          "canonical_name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "canonical_name"
+        ]
+      }
+    }
+  },
+  "required": [
+    "kind",
+    "pid",
+    "interpreter",
+    "check_sha256",
+    "manifest_sha256",
+    "environment",
+    "cwd",
+    "module_files",
+    "result",
+    "invocation_id",
+    "request_sha256",
+    "check_stdout_b64",
+    "check_stderr_b64",
+    "check_stdout_sha256",
+    "check_stderr_sha256",
+    "check_output_overflow",
+    "nonfile_modules"
+  ],
+  "$defs": {
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "path",
+        "sha256"
+      ]
+    },
+    "text": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "text"
+        },
+        "prefix": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "truncated": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "prefix",
+        "truncated"
+      ]
+    },
+    "omitted": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "opaque",
+            "large_integer",
+            "nonfinite_float"
+          ]
+        },
+        "omitted": {
+          "const": true
+        }
+      },
+      "required": [
+        "kind",
+        "omitted"
+      ]
+    },
+    "observation": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "KeyError"
+            }
+          },
+          "required": [
+            "kind"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "error"
+            },
+            "stage": {
+              "enum": [
+                "membership",
+                "lookup"
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "stage"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "value"
+            },
+            "value": {
+              "oneOf": [
+                {
+                  "type": [
+                    "null",
+                    "boolean",
+                    "integer",
+                    "number"
+                  ]
+                },
+                {
+                  "$ref": "#/$defs/text"
+                },
+                {
+                  "$ref": "#/$defs/omitted"
+                }
+              ]
+            }
+          },
+          "required": [
+            "kind",
+            "value"
+          ]
+        }
+      ]
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "ERROR"
+          ]
+        },
+        "error_stage": {
+          "enum": [
+            "membership",
+            "lookup",
+            "equality_evaluation"
+          ]
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "claim_id": {
+          "enum": [
+            "C1",
+            "C2",
+            "C3",
+            "C4"
+          ]
+        },
+        "assertion_id": {
+          "enum": [
+            "target_absent",
+            "target_lookup_KeyError",
+            "survivor_unchanged",
+            "target_present",
+            "target_reads_replacement"
+          ]
+        },
+        "status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "ERROR"
+          ]
+        },
+        "observed": {
+          "$ref": "#/$defs/observation"
+        },
+        "expected": {
+          "$ref": "#/$defs/observation"
+        },
+        "error_stage": {
+          "enum": [
+            "membership",
+            "lookup",
+            "equality_evaluation"
+          ]
+        }
+      },
+      "required": [
+        "claim_id",
+        "assertion_id",
+        "status",
+        "observed",
+        "expected"
+      ]
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scenario_id": {
+          "enum": [
+            "expiry_at_boundary",
+            "expiry_before_boundary",
+            "valid_replacement",
+            "absent_target"
+          ]
+        },
+        "historical_role": {
+          "enum": [
+            "discriminator",
+            "control"
+          ]
+        },
+        "status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "ERROR"
+          ]
+        },
+        "assertions": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/assertion"
+          }
+        },
+        "observations": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "target_membership": {
+              "$ref": "#/$defs/observation"
+            },
+            "target_lookup": {
+              "$ref": "#/$defs/observation"
+            },
+            "survivor_lookup": {
+              "$ref": "#/$defs/observation"
+            }
+          },
+          "required": [
+            "target_membership",
+            "target_lookup",
+            "survivor_lookup"
+          ]
+        },
+        "setup_observations": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "target_membership": {
+              "$ref": "#/$defs/observation"
+            },
+            "target_lookup": {
+              "$ref": "#/$defs/observation"
+            },
+            "survivor_membership": {
+              "$ref": "#/$defs/observation"
+            },
+            "survivor_lookup": {
+              "$ref": "#/$defs/observation"
+            }
+          },
+          "required": [
+            "target_membership",
+            "target_lookup",
+            "survivor_membership",
+            "survivor_lookup"
+          ]
+        },
+        "setup_evaluations": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "target_membership": {
+              "$ref": "#/$defs/evaluation"
+            },
+            "target_lookup": {
+              "$ref": "#/$defs/evaluation"
+            },
+            "survivor_membership": {
+              "$ref": "#/$defs/evaluation"
+            },
+            "survivor_lookup": {
+              "$ref": "#/$defs/evaluation"
+            }
+          },
+          "required": [
+            "target_membership",
+            "target_lookup",
+            "survivor_membership",
+            "survivor_lookup"
+          ]
+        }
+      },
+      "required": [
+        "scenario_id",
+        "historical_role",
+        "status",
+        "assertions",
+        "observations",
+        "setup_observations",
+        "setup_evaluations"
+      ]
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "ERROR"
+          ]
+        },
+        "contract_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "recipe_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "template_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "revision": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "snapshot_verified_before_and_after": {
+          "const": true
+        },
+        "imports_before": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/file"
+          }
+        },
+        "imports_after": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/file"
+          }
+        },
+        "scenarios": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/scenario"
+          }
+        }
+      },
+      "required": [
+        "status",
+        "contract_sha256",
+        "recipe_sha256",
+        "template_sha256",
+        "manifest_sha256",
+        "revision",
+        "snapshot_verified_before_and_after",
+        "imports_before",
+        "imports_after",
+        "scenarios"
+      ]
+    }
+  },
+  "$comment": "Structural documentation only. execution_evidence.verify_envelope also strictly parses retained original check stdout, checks raw base64/hash/limits and invocation/request bindings, interpreter/env/cwd and module kinds, exact context hashes and scoped assertion classifications. evaluate_history requires a separate per-invocation launch/collection ledger and rereads bounded outer raw streams. Partial ERROR and worker failures remain ineligible. Endpoint checks do not prove continuous state integrity."
+}
