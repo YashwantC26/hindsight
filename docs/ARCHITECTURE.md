@@ -13,7 +13,11 @@ flowchart LR
   V --> A[Separate human activation]
   A --> P[Future candidate preparation]
   P --> E[Separate execution decision]
-  E --> X[Collection and reconstruction]
+  E --> X[Nine fresh B/R/N workers]
+  X --> V2[Retained evidence reconstruction]
+  V2 --> O[Private original report]
+  O --> S2[Allowlisted public summary + checksum]
+  S2 --> D2[Static dashboard replay]
 ```
 
 Source provenance, semantic interpretation, conformance, human approval, historical
@@ -41,7 +45,11 @@ Partial failure consumes an attempt; retry needs a new preparation/authorization
 E's plan is B/R/N, N/R/B, B/R/N. Each of nine fresh workers has a ten-second
 timeout, outer stdout/stderr limits 262144/65536 bytes, inner limits 32768/8192,
 flags -I -S -B, controlled environment and fresh cwd. Snapshots are revalidated
-before/after workers; cross-tree file aliases are rejected. No real E run exists.
+before/after workers; cross-tree file aliases are rejected. The retained E run
+is complete: B PASS, R REGRESSION_DETECTED, N PASS, with three stable repetitions
+each. The dashboard is a presentation layer over a generated public summary;
+it neither authorizes nor executes. Browser checks detect absent/changed/invalid
+summary data against a committed manifest, not forged original execution.
 
 Candidates must be locally trusted after inspection. Isolation flags are not a
 hostile-code sandbox or network restriction. Interpreter/stdlib/Git are trusted
@@ -50,5 +58,5 @@ and publication do not continuously lock all inputs against concurrent writers.
 No remote attestation, generalized proof, novelty or economic benefit is claimed.
 
 The public clone omits local approvals and evidence and is not itself ACTIVE.
-Local status is historically accepted, D ACTIVE, E PREPARED_NOT_AUTHORIZED.
+Local status is historically accepted, D ACTIVE, E VERIFIED_REAL_DEMO.
 Public summaries document that state; they cannot independently certify it.

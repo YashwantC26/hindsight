@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="HINDSIGHT — developer-controlled regression memory for AI-assisted coding. Inspect a verified, intentionally seeded regression demonstration.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; base-uri 'none'; object-src 'none'">
+  <title>HINDSIGHT · Regression memory</title>
+  <link rel="icon" href="mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to regression comparison</a>
+  <header class="topbar">
+    <a class="brand" href="./"><img src="mark.svg" width="27" height="27" alt="">HINDSIGHT<span class="brand-tag">REGRESSION MEMORY</span></a>
+    <div class="toplinks"><span class="live-label"><i></i> Retained evidence</span><a href="https://github.com/YashwantC26/hindsight" target="_blank" rel="noopener">GitHub ↗</a></div>
+  </header>
+  <main id="main">
+    <div class="eyebrow"><span>MEMORY 001</span><span>/</span><code>cachetools.TLRUCache.__setitem__</code><span class="session">CHECKPOINT E</span></div>
+    <section class="hero">
+      <div><h1>Fix it once. Remember what matters.</h1><p>Developer-controlled regression memory for AI-assisted coding.<br>A previously fixed behavior, tested against the next change.</p></div>
+      <div class="hero-status" id="verification-state" role="status">Loading evidence…</div>
+    </section>
+    <div class="disclosure"><span class="disclosure-icon">!</span><div><strong>INTENTIONALLY_SEEDED_REGRESSION</strong><span>R deliberately reintroduces a known bug. This is a real executed demonstration, not autonomous discovery of a naturally occurring AI-generated bug.</span></div></div>
+    <ol class="workflow" aria-label="Developer review workflow">
+      <li><span>01</span> Historical bug</li><li><span>02</span> Reviewed contract</li><li><span>03</span> Generated check</li><li><span>04</span> Approved activation</li><li><span>05</span> Candidate evaluation</li>
+    </ol>
+    <section id="error" class="error-state" hidden role="alert"><h2>Evidence unavailable</h2><p id="error-message"></p><p>No candidate outcome is displayed. Serve this folder over HTTP and restore the reviewed data and integrity files.</p><button id="retry">Reload evidence</button></section>
+    <div id="results" hidden>
+      <div class="section-heading"><h2>One memory. Three candidate outcomes.</h2><div class="metrics" id="metrics"></div></div>
+      <div class="candidates" id="candidates" aria-label="Select a candidate to inspect"></div>
+      <section class="comparison" aria-label="Candidate details">
+        <div class="panel findings-panel">
+          <div class="panel-heading"><div><span class="eyebrow small">CONTRACT COMPARISON</span><h2 id="finding-title"></h2></div><span id="finding-count" class="count-tag"></span></div>
+          <div id="findings"></div>
+          <p class="panel-note" id="finding-note"></p>
+        </div>
+        <div class="panel code-panel">
+          <div class="panel-heading"><div><span class="eyebrow small">CHANGE INSPECTOR</span><h2 id="change-title"></h2></div><span class="file-tag">__init__.py</span></div>
+          <pre id="code-diff" aria-label="Actual candidate patch or baseline excerpt"></pre>
+          <p id="change-explanation" class="code-explanation"></p>
+        </div>
+      </section>
+      <div class="provenance-strip"><span class="integrity-dot"></span><strong>Verified original · public derived summary</strong><span>Report SHA-256</span><code id="report-hash"></code><button id="copy-hash" title="Copy full report SHA-256">Copy</button></div>
+      <section class="details-grid">
+        <details id="run-details"><summary>Execution & stability<span>Nine fresh processes</span></summary><div class="details-body"><div id="run-order" class="run-order"></div><p id="run-limits"></p><p>ERROR, UNSTABLE or incomplete evidence cannot be presented as a detected regression.</p></div></details>
+        <details id="contract-details"><summary>The reviewed contract<span>Four finite claims</span></summary><div id="claims" class="details-body"></div></details>
+        <details id="trust-details"><summary>Human boundaries & provenance<span>Original evidence stays local</span></summary><div class="details-body"><ul id="boundaries"></ul><p>This viewer cannot authorize, activate or execute candidates. Previous D approval was not E execution consent.</p><p>Summary checksums verify the published summary against its committed manifest. The report hash identifies private local originals; it does not prove their contents to a public clone or attest remote execution.</p><a href="demo-data.json">Inspect the public data JSON ↗</a></div></details>
+      </section>
+    </div>
+    <footer><div><strong>Bounded by design.</strong> One known case; finite integer fixtures; known upstream-test overlap. Locally trusted candidates. No hostile-code sandbox, unseen-bug generalization or universal correctness.</div><div>cachetools © Thomas Kemmer · MIT<span>Built for a developer’s decision.</span></div></footer>
+  </main>
+  <noscript><p class="error-state">JavaScript is required to load and validate the public evidence summary. No outcome is available without it.</p></noscript>
+</body>
+</html>

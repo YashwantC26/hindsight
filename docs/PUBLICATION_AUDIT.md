@@ -30,21 +30,26 @@ as code, not exported real credentials or developer decisions. No detected live
 credentials or private reviewer values are included. This is a bounded audit,
 not a claim that regex screening can prove the absence of every possible secret.
 
-The local installation was read-only verified as D ACTIVE and E
-PREPARED_NOT_AUTHORIZED; 203 approved bindings and 49 historical evidence files
-verified. Nine real candidate processes were not run and no E authorization was
-created. Portable tests and local synthetic suites are recorded separately.
-The public clone deliberately lacks approval evidence and is not ACTIVE itself.
+The original source publication recorded D ACTIVE and E PREPARED_NOT_AUTHORIZED.
+The subsequent independently reviewed, separately authorized real E run is now
+VERIFIED_REAL_DEMO. During this dashboard task the existing read-only evidence
+verifier passed; no candidate was rerun and no approval or authorization was created.
+The original report hash was checked before any derivation. New publication files
+contain a generated allowlisted summary, narrow attributed diff/excerpt, static
+dashboard, presentation tests and submission documentation. No original raw
+evidence or private approval metadata was added. The public clone deliberately
+lacks approval evidence and is not itself ACTIVE or independently authorized.
 
 The older preservation receipt comparison is 620/621 due solely to ancillary
 Finder metadata. That discrepancy is preserved and disclosed; it is not silently
 repaired or restated as a current 621/621 claim. The obsolete D absence assertion
 is separate from current read-only decision validation.
 
-A GitHub target has not yet been verified: the supplied repository URL is a
-placeholder. No visibility change, remote creation, force push or history overwrite
-is permitted. Publishing requires a real existing GitHub URL, authenticated access,
-and an empty or compatible target history. Unrelated remote history blocks a push.
+The existing public GitHub target is YashwantC26/hindsight, branch main. The initial
+reviewed publication commit is c7b4935cec5cfb60b4d20f85fc3131d9f6b2e4ba. Dashboard
+changes use a normal descendant commit and non-force push. Visibility and original
+research history are preserved. Private review packets remain local historical
+records; their pre-execution statements are not rewritten as current status.
 
 The local publication commit uses an explicitly non-personal publication identity,
 not a fabricated reviewer identity. It is not a signed human approval. The original

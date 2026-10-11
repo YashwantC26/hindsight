@@ -48,10 +48,11 @@
   ],
   "portable_public_tests_passed": 23,
   "local_E_and_reusable_tests_passed": 85,
-  "real_historical_or_candidate_execution": false,
-  "real_authorization_created": false,
   "public_template_scope": "Eight original synthetic cases; one snapshot-dependent static API case intentionally omitted from public copy",
   "initial_public_attempt": "One expected missing-snapshot error before making the public subset explicit; original local test unchanged",
   "D_legacy_test_note": "Prior 39/40: pre-activation-only decision-absence assertion, not current effective validity. Not rerun in publication task.",
-  "additional_disclosure_probes": "User reports independent 17/17 re-audit probes; not rerun or independently claimed here"
+  "additional_disclosure_probes": "User reports independent 17/17 re-audit probes; not rerun or independently claimed here",
+  "historical_test_record_scope": "Results recorded during initial source publication; these tests did not run real historical or E candidates",
+  "test_suites_executed_real_candidates": false,
+  "test_suites_created_real_authorization": false
 }

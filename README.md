@@ -13,6 +13,28 @@ This is the publication-safe source release. Original local evidence is excluded
 approved files, hash bindings and decisions remain preserved in the private
 research workspace.
 
+## Run the judge-facing demo
+
+```sh
+git clone https://github.com/YashwantC26/hindsight.git
+cd hindsight
+python3 -B -m http.server 8000 --bind 127.0.0.1 --directory dashboard/dist
+```
+
+Open **http://127.0.0.1:8000**. Python 3.10+ is the only requirement to serve the
+static frontend. No npm install, backend, API key or model service is needed.
+The dashboard reads a checksum-bound public summary at runtime and fails visibly
+if it is missing or invalid. It replays retained results; it never executes candidates.
+
+**VERIFIED_REAL_DEMO:** B PASS · R REGRESSION_DETECTED · N PASS. Nine invocations,
+three stable repetitions per candidate, 108 assertions and 144 setup checks.
+The retained original report SHA-256 is
+`38d9b7e03bb9b3988bf1bdaa078e6b407fc729d55f5ce3618b8515e7c1e2ac6b`.
+
+[90-second recording script](docs/DEMO_SCRIPT.md) ·
+[Submission description](docs/SUBMISSION.md) ·
+[Publication-safe evidence](docs/EVIDENCE_SUMMARY.md).
+
 ## How HINDSIGHT works
 
 1. Identify one known buggy/fixed revision pair and preserve source provenance.
@@ -35,14 +57,15 @@ membership/readability. Four finite scenarios produce twelve assertions per run.
 | Contract and exact check | Human approved | Specific bytes and finite obligations were reviewed. |
 | Historical validation | Completed and accepted | Retained A/B/B/A/A/B evidence discriminates buggy and fixed revisions. |
 | Checkpoint D | Effectively ACTIVE | The existing decision validates against current bindings. |
-| Checkpoint E | PREPARED_NOT_AUTHORIZED | demo-v2 source trees are inspected and bound; no E authorization or execution exists. |
-| Future-patch result | NOT_OBSERVED | Expected candidate outcomes have not been measured in a real E run. |
+| Checkpoint E | VERIFIED_REAL_DEMO | Separately authorized run completed; retained evidence independently reviewed and read-only reverified. |
+| Future candidate results | B PASS / R REGRESSION_DETECTED / N PASS | Three stable repetitions each; R fails precisely four C1/C2 scenario pairs. |
 
 **INTENTIONALLY_SEEDED_REGRESSION:** R inserts an early return in the expired
 replacement branch. It is deliberately seeded for demonstration and is not
 evidence of autonomous discovery of a naturally occurring AI-generated bug.
-N adds a setter docstring as a benign control. No real future-patch regression
-detection is claimed.
+N adds a setter docstring as a benign control. The real authorized execution
+detected this deliberately seeded regression; it did not discover a naturally
+occurring bug autonomously.
 
 ## Architecture and trust boundaries
 
@@ -89,6 +112,7 @@ or malformed bindings fail closed. No summary field overrides raw reconstruction
 [Public status](docs/status.json) and
 [test results](docs/verification-results.json) are sanitized summaries,
 not replacement approvals or portable proof that a public clone is ACTIVE.
+The dashboard's data and manifest bind a derived summary, not public raw evidence.
 Reviewer records, decisions, raw execution logs and complete upstream snapshots
 are deliberately excluded. The actual human demo-v2 review packet stays local.
 
@@ -106,23 +130,32 @@ Finder metadata discrepancy; approved bindings and historical evidence still mat
 
 Python standard library, Git commit/tree/blob provenance, SHA-256, strict JSON,
 deterministic templates, AST checks, unittest, bounded subprocess collection,
-and POSIX exclusive atomic publication. No dashboard or orchestration framework
-is needed for this MVP demonstration.
+and POSIX exclusive atomic publication. The judge-facing dashboard is buildless
+HTML, CSS and JavaScript using Web Crypto for summary checksums. It uses no
+frontend framework, external fonts, analytics or remote API.
 
 ## Hackathon demo instructions
 
-1. Explain the reviewed regression memory and separate human gates.
-2. Show the four claims and [R/N patches](HINDSIGHT/product_mvp/checkpoint_e/candidates/).
-3. Run the portable suites, labeling stale-value detection and the lookup matrix
-   as synthetic demonstrations.
-4. Show historical validation completed, D ACTIVE locally, E
-   PREPARED_NOT_AUTHORIZED, and future outcomes NOT_OBSERVED.
-5. Explain the next human gate: review demo-v2 and separately decide whether to
-   authorize exactly nine processes. Stop before authorization or execution.
+1. Launch the dashboard and use the [90-second script](docs/DEMO_SCRIPT.md).
+2. Point out the seeded disclosure before describing the detected regression.
+3. Inspect R's one-line patch and four exact scenario/claim failures.
+4. Switch to B and N, then expand the stable execution order and provenance.
+5. Explain separate human gates and the distinction between original local
+   evidence and this public derived replay. Do not rerun candidates for the video.
 
-Submit the verified GitHub URL and commit, a short demo recording, the seeded
-disclosure and current limitations. Actual E execution is a separate task, not
-a prerequisite for honestly presenting this state.
+Submit this GitHub URL, the commit and a short recording with disclosure and limits.
+
+Dashboard checks (optional Node.js 20+ for JavaScript tests):
+
+```sh
+node --test tests/data.test.mjs
+python3 -B -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+The private original evidence is needed only to regenerate the summary using
+tools/export_demo.py. A fresh clone runs the already-generated dashboard and
+portable tests without those originals. Full historical/E execution is intentionally
+not a fresh-clone demo command.
 
 HINDSIGHT source is MIT licensed. cachetools is separately MIT licensed; narrow
 patch context is attributed in [NOTICE](NOTICE.md), with its license

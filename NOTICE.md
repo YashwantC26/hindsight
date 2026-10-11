@@ -8,7 +8,7 @@ The historical subject and upstream reference belong to
 [cachetools](https://github.com/tkem/cachetools), copyright 2014–2026 Thomas Kemmer,
 distributed under the MIT license retained in
 [third_party/cachetools-LICENSE.txt](third_party/cachetools-LICENSE.txt).
-The two candidate patches contain narrow upstream source context; retain that
+The two candidate patches and dashboard baseline excerpt contain narrow upstream source context; retain that
 copyright and license when redistributing those excerpts. Complete upstream
 source trees, tests and the restored bare Git repository are not vendored.
 

@@ -1,4 +1,15 @@
-# Safe reproduction and hackathon demo
+# Fresh-clone setup and safe reproduction
+
+```sh
+git clone https://github.com/YashwantC26/hindsight.git
+cd hindsight
+python3 -B -m http.server 8000 --bind 127.0.0.1 --directory dashboard/dist
+```
+
+Open http://127.0.0.1:8000. The checked-in dashboard runs immediately with Python;
+it needs no build, install, model service or private fixture. Stop with Ctrl-C.
+If port 8000 is busy, use another port and open the matching URL. Double-clicking
+index.html is unsupported because the browser must fetch and validate the data.
 
 Use Python 3.10+ (tested on 3.14) and the standard library. No API credentials,
 model service, cachetools installation or upstream download is needed.
@@ -23,16 +34,23 @@ private approved fixtures. Use the listed portable suites, not broad discovery.
 Public-clone activation/E verification must fail closed with missing evidence;
 do not manufacture approvals to make it succeed.
 
-Demo: show status.json; inspect complete R/N patches; disclose
-INTENTIONALLY_SEEDED_REGRESSION; explain C1–C4; run synthetic suites; inspect the
-validator/worker/gates; finish with the next human execution-review decision.
-Do not claim a real future-patch result from these tests or from a seeded patch.
+Demo: use the dashboard and DEMO_SCRIPT.md. Disclose
+INTENTIONALLY_SEEDED_REGRESSION; explain C1–C4; inspect the four R failures and
+actual diff; show the nine retained invocations and original report hash. The
+authorized real seeded demonstration is complete. Portable tests remain synthetic
+and do not constitute another real candidate run.
 
 The private local installation has exact snapshots, decisions and raw evidence.
 Its verification also binds interpreter and object-source identity. This source
 release supports inspection and synthetic reproduction, not portable replay of
 private approval evidence. A new full chain requires new human review decisions
 and separately authorized execution.
+
+Presentation tests: node --test tests/data.test.mjs (Node.js 20+), then
+python3 -B -m unittest discover -s tests -p 'test_*.py' -v.
+These check summary consistency, failure handling and export rejection. Browser QA
+also covers candidate switching, expanded details, laptop/mobile layout and missing,
+changed and malformed summary data. See EVIDENCE_SUMMARY.md for trust limits.
 
 The public template suite omits the one original static API-conformance test that
 requires full A/B snapshots. The omission is recorded in source-inventory.json;

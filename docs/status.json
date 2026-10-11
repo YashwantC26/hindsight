@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scope": "Sanitized summary of the independently verified local installation; not portable activation evidence",
+  "scope": "Sanitized summary of verified local installation and retained authorized real E run; public clone is a replay, not portable activation evidence",
   "public_checkout_active": false,
   "local_contract": "cachetools-tlru-expired-replacement",
   "local_contract_version": 1,
@@ -27,10 +27,14 @@
     "raw_evidence_published": false
   },
   "local_checkpoint_D": "ACTIVE",
-  "local_checkpoint_E": "PREPARED_NOT_AUTHORIZED",
-  "real_E_authorization_exists": false,
-  "real_E_candidate_execution_occurred": false,
-  "real_future_patch_outcome": "NOT_OBSERVED",
+  "local_checkpoint_E": "VERIFIED_REAL_DEMO",
+  "real_E_authorization_exists": true,
+  "real_E_candidate_execution_occurred": true,
+  "real_future_patch_outcome": {
+    "B": "PASS",
+    "N": "PASS",
+    "R": "REGRESSION_DETECTED"
+  },
   "candidate_R_disclosure": "INTENTIONALLY_SEEDED_REGRESSION",
   "disclosure": "The regression is deliberately seeded for demonstration and is not evidence of autonomous discovery of a naturally occurring AI-generated bug.",
   "local_approved_binding_count": 203,
@@ -45,16 +49,20 @@
     "demo_v2_bundle_sha256": "0e8ece5853eaa986dbe434856a1d3b72b10676c6232c4e86fb53983602bac236",
     "approved_check_sha256": "10f555bd6b96f2b23714435b9240242103d496bb70c082e1664b66a3f7bc86ec"
   },
-  "expected_only": {
-    "B": "PASS",
-    "R": "C1/C2 violations in both expiry discriminators; controls PASS",
-    "N": "PASS"
-  },
   "limits": [
     "INTENTIONALLY_SEEDED_REGRESSION",
     "The regression is deliberately seeded for demonstration and is not evidence of autonomous discovery of a naturally occurring AI-generated bug.",
     "Known case with upstream-test overlap; no unseen-bug discovery or generalization",
     "Locally trusted developer-inspected candidates; no hostile-code or network isolation",
     "Local self-attestation and ledgers; no strong identity or remote execution attestation"
-  ]
+  ],
+  "observed_E_totals": {
+    "assertions": 108,
+    "failed_assertions": 12,
+    "invocations": 9,
+    "setup_checks": 144
+  },
+  "demo_expectations_met": true,
+  "report_sha256": "38d9b7e03bb9b3988bf1bdaa078e6b407fc729d55f5ce3618b8515e7c1e2ac6b",
+  "public_evidence_kind": "PUBLIC_DERIVED_SUMMARY"
 }
